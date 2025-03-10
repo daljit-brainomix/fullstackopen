@@ -6,7 +6,7 @@ const Button = (props) => {
     <button onClick={props.onClick}>{props.text}</button>
   </>
 }
-const ShowStat = (props) => {
+const DisplayStat = (props) => {
   return <>
     <p><strong>{props.text}:</strong> {props.feedback}</p>
   </>
@@ -17,15 +17,33 @@ const App = () => {
   const [good, setGood] = useState(0)
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
-  
+  const [total, setTotal] = useState(0)
+  const [averageScore, setAverageScore] = useState(0)
+  const [positivePercentage, setPositivePercentage] = useState(0)
+
   const handleGood = () => {
-    setGood(good+1)
+    const updatedGood = good+1
+    const updatedTotal = total+1
+    setGood(updatedGood)
+    setTotal(updatedTotal)
+    setAverageScore(((updatedGood*1)+(neutral*0)+(bad*-1))/3)
+    setPositivePercentage((updatedGood/updatedTotal)*100)
   }
   const handleNeutral = () => {
-    setNeutral(neutral+1)
+    const updatedNeutral = neutral+1
+    const updatedTotal = total+1
+    setNeutral(updatedNeutral)
+    setTotal(updatedTotal)    
+    setAverageScore(((good*1)+(updatedNeutral*0)+(bad*-1))/3)
+    setPositivePercentage((good/updatedTotal)*100)
   }
   const handleBad = () => {
-    setBad(bad+1)
+    const updatedBad = bad+1
+    const updatedTotal = total+1
+    setBad(updatedBad)
+    setTotal(updatedTotal)    
+    setAverageScore(((good*1)+(neutral*0)+(updatedBad*-1))/3)    
+    setPositivePercentage((good/updatedTotal)*100)
   }
 
   return (
@@ -36,42 +54,16 @@ const App = () => {
       <Button onClick={handleBad} text="Bad" /> &nbsp;
 
       <h2>Statistics</h2>
-      <ShowStat feedback={good} text="Good" />
-      <ShowStat feedback={neutral} text="Neutral" />
-      <ShowStat feedback={bad} text="Bad" />
+      <DisplayStat feedback={good} text="Total Good" />
+      <DisplayStat feedback={neutral} text="Total Neutral" />
+      <DisplayStat feedback={bad} text="Total Bad" />
+      <DisplayStat feedback={total} text="Total Feedback" />
+      
+      <DisplayStat feedback={averageScore} text="Average Score" />
+      <DisplayStat feedback={positivePercentage+"%"} text="Positive feedback" />
+
     </div>
   )
 }
 
 export default App
-
-// function App() {
-//   const [count, setCount] = useState(0)
-
-//   return (
-//     <>
-//       <div>
-//         <a href="https://vite.dev" target="_blank">
-//           <img src={viteLogo} className="logo" alt="Vite logo" />
-//         </a>
-//         <a href="https://react.dev" target="_blank">
-//           <img src={reactLogo} className="logo react" alt="React logo" />
-//         </a>
-//       </div>
-//       <h1>Vite + React</h1>
-//       <div className="card">
-//         <button onClick={() => setCount((count) => count + 1)}>
-//           count is {count}
-//         </button>
-//         <p>
-//           Edit <code>src/App.jsx</code> and save to test HMR
-//         </p>
-//       </div>
-//       <p className="read-the-docs">
-//         Click on the Vite and React logos to learn more
-//       </p>
-//     </>
-//   )
-// }
-
-// export default App
