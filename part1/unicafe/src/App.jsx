@@ -6,9 +6,9 @@ const Button = (props) => {
   </>
 }
 
-const DisplayStat = (props) => {
+const StatisticLine = (props) => {
   return <>
-    <p><strong>{props.text}:</strong> {props.feedback}</p>
+    <p><strong>{props.text}:</strong> {props.value}</p>
   </>
 }
 
@@ -31,14 +31,14 @@ const Statistics = (props) => {
   else 
   {
     return <>
-      <DisplayStat feedback={props.good} text="Good" />
-      <DisplayStat feedback={props.neutral} text="Neutral" />
-      <DisplayStat feedback={props.bad} text="Bad" />
+      <StatisticLine value={props.good} text="Good" />
+      <StatisticLine value={props.neutral} text="Neutral" />
+      <StatisticLine value={props.bad} text="Bad" />
 
-      <DisplayStat feedback={total} text="Feedback" />
+      <StatisticLine value={total} text="Feedback" />
       
-      <DisplayStat feedback={averageScore} text="Average Score" />
-      <DisplayStat feedback={positivePercentage+"%"} text="Positive feedback" />    
+      <StatisticLine value={averageScore} text="Average Score" />
+      <StatisticLine value={positivePercentage+"%"} text="Positive feedback" />    
     </>
   }
 }
