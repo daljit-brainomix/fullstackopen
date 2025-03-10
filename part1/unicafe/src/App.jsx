@@ -16,16 +16,20 @@ const Statistics = (props) => {
   
   const total = props.good + props.neutral + props.bad 
   const averageScore = ((props.good*1)+(props.neutral*0)+(props.bad*-1))/3
-  let positivePercentage = 0
+  
+  let positivePercentage = 0  
   if(total > 0) {
     positivePercentage = (props.good/total)*100
   }
 
-  if(total < 1) {
+  if(total < 1) 
+  {
     return <>
       <p>No feedback given.</p>
     </>
-  } else {
+  } 
+  else 
+  {
     return <>
       <DisplayStat feedback={props.good} text="Good" />
       <DisplayStat feedback={props.neutral} text="Neutral" />
