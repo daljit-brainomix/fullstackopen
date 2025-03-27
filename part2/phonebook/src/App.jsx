@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import axios from 'axios'
 
 const FilterPersons = (props) => {
   return (
@@ -34,19 +35,20 @@ const ShowPersons = (props) => {
 }
 
 const App = () => {
-
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '040-123456', id: 1 },
-    { name: 'Ada Lovelace', number: '39-44-5323523', id: 2 },
-    { name: 'Dan Abramov', number: '12-43-234345', id: 3 },
-    { name: 'John Smith', number: '12-43-234366', id: 4 },
-    { name: 'Mary Poppendieck', number: '39-23-6423122', id: 5 }
-  ])
-
+  const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filterKeywords, setFilterKeywords] = useState('')
  
+  const fetchServerNotes = () => {
+    axios
+      .get("http://localhost:3001/persons")
+      .then((response) => {
+        setPersons(response.data)
+      })
+  }
+  useEffect(fetchServerNotes, [])
+  
   const personsToShow = filterKeywords === "" ? persons : persons.filter(person => person.name.includes(filterKeywords))
 
   const handleNewName = (event) => {
