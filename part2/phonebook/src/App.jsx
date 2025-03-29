@@ -86,7 +86,6 @@ const App = () => {
   return (    
     <div>      
       <h1>Phonebook</h1>
-      
       <FilterPersons keywords={filterKeywords} setKeywords={handleFilterKeywords} />
 
       <h2>Add a new entry</h2>
