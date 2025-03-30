@@ -120,6 +120,7 @@ const App = () => {
         .updateEntry(updateId, updatedPerson)
         .then(returnedPerson => setPersons(persons.map(person => person.id === updateId ? returnedPerson : person)))
         .then(() => showMessage(`Successfully changed ${newName}, ${newNumber}`, "success"))
+        .catch(() => showMessage(`Information of ${newName}, ${newNumber} has already been removed from server`, "error"))
 
     }
     else 
@@ -134,6 +135,7 @@ const App = () => {
         createEntry(newNameObject)
         .then(() => setPersons(persons.concat(newNameObject)))
         .then(() => showMessage(`Successfully added ${newName}, ${newNumber}`, "success"))
+        .catch(() => showMessage(`Information of ${newName}, ${newNumber} cannot be saved on server`, "error"))
     }
     setNewName("")
     setNewNumber("")
