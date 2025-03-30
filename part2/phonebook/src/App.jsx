@@ -33,9 +33,8 @@ const ShowPersons = (props) => {
       {props.persons.map(person => (
         <p key={person.id}>
           {person.name} {person.number} 
-          <button onClick={()=> props.handleDelete(person.id)}>
-            Delete
-          </button>
+          &nbsp;
+          <button onClick={()=> props.handleDelete(person.id)}>Delete</button>
         </p>))
       }
     </>
@@ -72,30 +71,63 @@ const App = () => {
   
   const handleDeletePerson = (id) => {
     if (window.confirm("Are you sure you want to delete this contact?")) {
-      console.log("Deleting ID ....", id)
       phonebookService
         .deleteEntry(id)
         .then(() => setPersons(persons.filter((person) => person.id !== id)));
     }
   }
 
+
   const handleAddPerson = (event) => {
     event.preventDefault()
-    
-    const newNameObject = {
-      name: newName,
-      number: newNumber,
-      id: String(persons.length + 1)
-    }
-
-    for(var i=0;i<persons.length;i++) {
-      if((persons[i].name === newName) && persons[i].number === newNumber) {
-        alert(`${newName} (${newNumber}) is already added to phonebook.`)
-        return
+     
+    var updateExisting = false
+    var updateId = 0 
+    for(var i=0;i<persons.length;i++) 
+    {
+      if(persons[i].name === newName) 
+      {
+        if(persons[i].number === newNumber) 
+        {
+          // New number is the same, we don't need to update it.
+          alert(`${newName} (${newNumber}) is already added to phonebook`)
+          return
+        }
+        // New number is different than the existing, lets check if they really want to update it
+        else if(window.confirm(`${newName} is already added to phonebook, replace the old number (${persons[i].number}) with a new one (${newNumber})?`)) 
+        {          
+          updateExisting=true
+          updateId = persons[i].id
+        } 
+        else
+        {
+          return
+        }
       }
     }
-    phonebookService.createEntry(newNameObject)
-    setPersons(persons.concat(newNameObject))
+    if(updateExisting)
+    {
+      const updatedPerson = {
+        name: newName,
+        number: newNumber
+      }
+      phonebookService
+        .updateEntry(updateId, updatedPerson)
+        .then(returnedPerson => {
+          setPersons(persons.map(person => person.id === updateId ? returnedPerson : person))
+        })
+    }
+    else 
+    {
+      const newNameObject = {
+        name: newName,
+        number: newNumber,
+        id: String(persons.length + 1)
+      }
+  
+      phonebookService.createEntry(newNameObject)
+      setPersons(persons.concat(newNameObject))
+    }
     setNewName("")
     setNewNumber("")
   }
