@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import phonebookService from "./services/phonebook"
+import Notification from './components/Notification'
 
 const FilterPersons = (props) => {
   return (
@@ -46,6 +47,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filterKeywords, setFilterKeywords] = useState('')
+  const [notificationMessage, setNotificationMessage] = useState(null)
  
   const fetchServerNotes = () => {
     phonebookService
@@ -76,7 +78,10 @@ const App = () => {
         .then(() => setPersons(persons.filter((person) => person.id !== id)));
     }
   }
-
+  const showMessage = (message, type) => {
+    setNotificationMessage({text: message, type: type})
+    setTimeout(() => setNotificationMessage(null), 5000)
+  }
 
   const handleAddPerson = (event) => {
     event.preventDefault()
@@ -90,7 +95,7 @@ const App = () => {
         if(persons[i].number === newNumber) 
         {
           // New number is the same, we don't need to update it.
-          alert(`${newName} (${newNumber}) is already added to phonebook`)
+          showMessage(`${newName} (${newNumber}) is already added to phonebook`, "error")
           return
         }
         // New number is different than the existing, lets check if they really want to update it
@@ -113,9 +118,9 @@ const App = () => {
       }
       phonebookService
         .updateEntry(updateId, updatedPerson)
-        .then(returnedPerson => {
-          setPersons(persons.map(person => person.id === updateId ? returnedPerson : person))
-        })
+        .then(returnedPerson => setPersons(persons.map(person => person.id === updateId ? returnedPerson : person)))
+        .then(() => showMessage(`Successfully changed ${newName}, ${newNumber}`, "success"))
+
     }
     else 
     {
@@ -125,16 +130,19 @@ const App = () => {
         id: String(persons.length + 1)
       }
   
-      phonebookService.createEntry(newNameObject)
-      setPersons(persons.concat(newNameObject))
+      phonebookService.
+        createEntry(newNameObject)
+        .then(() => setPersons(persons.concat(newNameObject)))
+        .then(() => showMessage(`Successfully added ${newName}, ${newNumber}`, "success"))
     }
     setNewName("")
     setNewNumber("")
   }
 
   return (    
-    <div>      
+    <div>
       <h1>Phonebook</h1>
+      <Notification message={notificationMessage} />
       <FilterPersons keywords={filterKeywords} setKeywords={handleFilterKeywords} />
 
       <h2>Add a new entry</h2>
