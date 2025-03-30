@@ -26,10 +26,18 @@ const PersonForm = (props) => {
     </form>
   )
 }
-const ShowPersons = (props) => {
+
+const ShowPersons = (props) => { 
   return (
     <>
-      {props.persons.map(person => <p key={person.id}>{person.name} {person.number}</p>)}
+      {props.persons.map(person => (
+        <p key={person.id}>
+          {person.name} {person.number} 
+          <button onClick={()=> props.handleDelete(person.id)}>
+            Delete
+          </button>
+        </p>))
+      }
     </>
   )
 }
@@ -60,6 +68,15 @@ const App = () => {
 
   const handleFilterKeywords = (event) => {
     setFilterKeywords(event.target.value)
+  }
+  
+  const handleDeletePerson = (id) => {
+    if (window.confirm("Are you sure you want to delete this contact?")) {
+      console.log("Deleting ID ....", id)
+      phonebookService
+        .deleteEntry(id)
+        .then(() => setPersons(persons.filter((person) => person.id !== id)));
+    }
   }
 
   const handleAddPerson = (event) => {
@@ -97,10 +114,12 @@ const App = () => {
         handleAddPerson={handleAddPerson} />
 
       <h2>Numbers</h2>
-      <ShowPersons persons={personsToShow} />
+      <ShowPersons persons={personsToShow} handleDelete={handleDeletePerson}/>
 
     </div>
   )
 }
 
 export default App
+
+

@@ -18,9 +18,15 @@ const updateEntry = (id, updatedEntry) => {
         .put(`${baseUrl}/${id}`, updatedEntry)
         .then(response => response.data)
 }
+const deleteEntry = (id) => {
+    return axios
+        .delete(`${baseUrl}/${id}`)
+        .then(response => response.data)
+}
 
 export default {
     getAll,
     createEntry,
-    updateEntry
+    updateEntry,
+    deleteEntry
 }
