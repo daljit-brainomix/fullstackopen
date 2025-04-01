@@ -13,3 +13,20 @@
 
 `npx json-server --port 3001 db.json`
 
+
+```
+Vite requires all env variables to start with VITE_
+
+Vite loads .env variables only on startup. If you just added the .env file, restart the dev server:
+
+or write directly
+
+export VITE_SOME_KEY=54l41n3n4v41m34rv0 && npm run dev // For Linux/macOS Bash
+($env:VITE_SOME_KEY="54l41n3n4v41m34rv0") -and (npm run dev) // For Windows PowerShell
+set "VITE_SOME_KEY=54l41n3n4v41m34rv0" && npm run dev // For Windows cmd.exe
+
+export VITE_WEATHER_API_KEY=asdfasfsadfsfsdf
+```
+
+```
+```

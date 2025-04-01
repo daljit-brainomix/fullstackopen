@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import CountriesService from './services/Countries'
-
+import DisplayCountry from './components/DisplayCountry'
 import './App.css'
 
 const DisplayFindCountriesInput = (props) => {
@@ -12,26 +12,7 @@ const DisplayFindCountriesInput = (props) => {
   )
 }
 
-const DisplayCountry = ({country}) => {
-  return (
-    <div>
-      <h2>{country.name.common}</h2>
-      <p>Captial: {country.capital[0]}</p>
-      <p>Area: {country.area}</p>
-      <h4>Languages</h4>
-      <ul>
-        {Object.values(country.languages).map((language, index) => (
-          <li key={index}>{language}</li>
-        ))}
-      </ul>
-      <img src={country.flags.png} alt={country.flags.alt} />
-    </div>
-  )
-}
-
 const DisplayFilteredCountries = ({countries, onSelectCountry, selectedCountry}) => {
-  console.log("selectedCountry", selectedCountry)
-
   let showCountryIndex = -1
   
   if (typeof selectedCountry === "number" && selectedCountry >= 0) 
@@ -71,7 +52,6 @@ const App = () => {
   const [selectedCountryIndex, setSelectedCountryIndex] = useState(null);
 
   const fetchAndLoadCountries = () => {
-    console.log("Fetching countries from the server ...")
     CountriesService
       .fetchAll()
       .then(initialData => setAllCountries(initialData))
@@ -83,7 +63,6 @@ const App = () => {
   const filteredCountries = filterKeywords === "" ? allCountries : allCountries.filter(country => country.name.common.toLowerCase().includes(filterKeywords.toLowerCase()))
   
   useEffect(fetchAndLoadCountries, [])
-  
   
   /* Input Handlers */
   const handleFilterKeywords = (event) => {
