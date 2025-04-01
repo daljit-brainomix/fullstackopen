@@ -29,7 +29,20 @@ const DisplayCountry = ({country}) => {
   )
 }
 
-const DisplayFilteredCountries = ({countries}) => {  
+const DisplayFilteredCountries = ({countries, onSelectCountry, selectedCountry}) => {
+  console.log("selectedCountry", selectedCountry)
+
+  let showCountryIndex = -1
+  
+  if (typeof selectedCountry === "number" && selectedCountry >= 0) 
+  {
+    showCountryIndex = selectedCountry
+  } 
+  else if(countries.length === 1)
+  {
+    showCountryIndex = 0
+  } 
+
   if(countries.length > 10) 
   {
     return (
@@ -38,18 +51,15 @@ const DisplayFilteredCountries = ({countries}) => {
         </p>
     )
   } 
-  else if(countries.length === 1) 
-  {
-    return (
-      <DisplayCountry country={countries[0]} />
-    )
-  }
   else 
   {
     return (
-      <ul className='filteredcountries'>
-        {countries.map((country, index) => <li key={index}>{country.name.common}</li>)}
-      </ul>
+      <div>
+        <ul className='filteredcountries'>
+          {countries.length >1 && countries.map((country, index) => <li key={index}>{country.name.common} <button onClick={() => onSelectCountry(index)}>show</button></li>)}
+        </ul>
+        {(showCountryIndex >= 0) && <DisplayCountry country={countries[showCountryIndex]} />} 
+      </div>
     )
   }
 
@@ -58,13 +68,18 @@ const DisplayFilteredCountries = ({countries}) => {
 const App = () => {
   const [filterKeywords, setFilterKeywords] = useState('')
   const [allCountries, setAllCountries] = useState([])
+  const [selectedCountryIndex, setSelectedCountryIndex] = useState(null);
 
   const fetchAndLoadCountries = () => {
+    console.log("Fetching countries from the server ...")
     CountriesService
       .fetchAll()
       .then(initialData => setAllCountries(initialData))
   }
 
+  if(selectedCountryIndex) {
+
+  }
   const filteredCountries = filterKeywords === "" ? allCountries : allCountries.filter(country => country.name.common.toLowerCase().includes(filterKeywords.toLowerCase()))
   
   useEffect(fetchAndLoadCountries, [])
@@ -73,6 +88,7 @@ const App = () => {
   /* Input Handlers */
   const handleFilterKeywords = (event) => {
     setFilterKeywords(event.target.value)
+    setSelectedCountryIndex(null)
   }
 
   return (
@@ -81,8 +97,12 @@ const App = () => {
       <h4>Our database contains information of <code>{allCountries.length}</code> countries.</h4>
 
       <DisplayFindCountriesInput keywords={filterKeywords} setKeywords={handleFilterKeywords} />
-  
-      <DisplayFilteredCountries countries={filteredCountries} />
+      {/* Only show once there are some keywords entered */}
+      {filterKeywords !== "" && 
+        <DisplayFilteredCountries 
+          countries={filteredCountries} 
+          onSelectCountry={setSelectedCountryIndex} 
+          selectedCountry={selectedCountryIndex} />}
     </>
   )
 }

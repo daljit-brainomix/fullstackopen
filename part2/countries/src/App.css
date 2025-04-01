@@ -43,6 +43,13 @@
 
 ul li {
   text-align: left;
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 5px;
+  padding:4px;
+}
+li button {
+  border:1px solid lightyellow;
+  margin-left: 10px;
 }
 input.filtercountry {
   padding:10px;
