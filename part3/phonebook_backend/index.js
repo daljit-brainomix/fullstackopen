@@ -25,7 +25,30 @@ let persons = [
       "number": "39-23-6423122"
     }
 ]
+// Helpers
+function generateRandomId() {
+    let minimum = 10
+    let maximum = 100000
+    return Math.floor(Math.random() * (maximum - minimum + 1)) + minimum;
+}
 
+function getNewPersonId()
+{
+    let newId = generateRandomId();
+    let newIdTaken = true;
+    while(newIdTaken) {
+        let person = persons.find(p => Number(p.id) === newId)
+        if(!person) {
+            newIdTaken=false            
+        } else {
+            newId = generateRandomId()
+        }
+        
+    }
+    return String(newId)
+}
+
+// API endpoints
 app.get('/', (request, response) => response.send('<h1>Phonebook Back-end!</h1>'))  
 
 app.get('/info', (request, response) => {    
@@ -50,6 +73,17 @@ app.delete('/api/persons/:id', (request, response) => {
     persons = persons.filter(person => person.id !== id)
   
     response.status(204).end()
+})
+
+app.post('/api/persons', (request, response) => {
+    const body = request.body
+    newPerson = {
+        id: getNewPersonId(),
+        name: body.name,
+        number: body.number,
+    }
+    persons = persons.concat(newPerson)
+    response.json(newPerson)
 })
 
 // Server settings 
