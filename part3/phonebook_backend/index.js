@@ -27,6 +27,10 @@ let persons = [
 ]
 
 app.get('/', (request, response) => response.send('<h1>Phonebook Back-end!</h1>'))  
+app.get('/info', (request, response) => {    
+    const request_datetime = new Date()
+    response.send(`<h1>Phonebook has ${persons.length} persons!</h1><p>${request_datetime}</p>`)
+})
 app.get('/api/persons', (request, response) => response.json(persons))
 
 // Server settings 
