@@ -27,11 +27,22 @@ let persons = [
 ]
 
 app.get('/', (request, response) => response.send('<h1>Phonebook Back-end!</h1>'))  
+
 app.get('/info', (request, response) => {    
     const request_datetime = new Date()
     response.send(`<h1>Phonebook has ${persons.length} persons!</h1><p>${request_datetime}</p>`)
 })
+
 app.get('/api/persons', (request, response) => response.json(persons))
+
+app.get('/api/persons/:id', (request, response) => {
+    const person = persons.find(p => p.id === request.params.id)
+    if(person) {
+        response.json(person)
+    } else {
+        response.status(404).end()
+    }
+})
 
 // Server settings 
 const PORT = 3001
