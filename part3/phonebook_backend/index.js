@@ -77,12 +77,27 @@ app.delete('/api/persons/:id', (request, response) => {
 
 app.post('/api/persons', (request, response) => {
     const body = request.body
+
+    if (!body.name || !body.number) {
+        return response.status(400).json({ 
+          error: 'Name or number is missing.' 
+        })
+    }
+    
+    const existingPerson = persons.find((p) => p.name === body.name)
+    if (existingPerson) {
+        return response.status(400).json({ 
+          error: 'The name already exists in the phonebook.' 
+        })
+    }
+    // Add new person
     newPerson = {
         id: getNewPersonId(),
         name: body.name,
         number: body.number,
     }
     persons = persons.concat(newPerson)
+    
     response.json(newPerson)
 })
 
