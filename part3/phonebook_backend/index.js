@@ -6,8 +6,11 @@ const app = express()
 // Middleware for parsing JSON content
 app.use(express.json())
 
+// Create a new morgan token to fetch body
+morgan.token('body', (req, res) => JSON.stringify(req.body))
+
 // HTTP request logger middleware
-app.use(morgan('tiny'))
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
 
 let persons = [
