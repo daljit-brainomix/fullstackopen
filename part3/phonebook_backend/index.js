@@ -1,7 +1,14 @@
 const express = require('express')
+var morgan = require('morgan')
+
 const app = express()
 
+// Middleware for parsing JSON content
 app.use(express.json())
+
+// HTTP request logger middleware
+app.use(morgan('tiny'))
+
 
 let persons = [
     { 
@@ -100,6 +107,13 @@ app.post('/api/persons', (request, response) => {
     
     response.json(newPerson)
 })
+
+// Middleware for catching requests made to non-existent routes
+const unknownEndpoint = (request, response) => {
+    response.status(404).send({ error: 'unknown endpoint' })
+  }
+  
+app.use(unknownEndpoint)
 
 // Server settings 
 const PORT = 3001
