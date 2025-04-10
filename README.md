@@ -4,7 +4,6 @@
 `npm create vite@latest introdemo -- --template react`
 
 ### Start the JSON Server without a separate installation by running the following npx command in the root directory of the application:
-`https://fullstackopen.com/en/part2/getting_data_from_server#the-browser-as-a-runtime-environment`
 
 `https://github.com/typicode/json-server`
 
@@ -27,6 +26,12 @@ set "VITE_SOME_KEY=54l41n3n4v41m34rv0" && npm run dev // For Windows cmd.exe
 
 export VITE_WEATHER_API_KEY=asdfasfsadfsfsdf
 ```
+
+On the BE server - `npm install cors`
+
+
+A production build for applications created with Vite can be created with the command `npm run build`.
+
 
 ```
 ```
