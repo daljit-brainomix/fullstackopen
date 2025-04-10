@@ -1,5 +1,4 @@
 const mongoose = require("mongoose")
-const { default: phonebook } = require("../../part2/phonebook/src/services/phonebook")
 
 // Skip node and script path
 const args = process.argv.slice(2)
