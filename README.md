@@ -33,5 +33,9 @@ On the BE server - `npm install cors`
 A production build for applications created with Vite can be created with the command `npm run build`.
 
 
+`MONGODB_URI="your_connection_string_here" npm run dev`
+
+`npm install dotenv`
+
 ```
 ```

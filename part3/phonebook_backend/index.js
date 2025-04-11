@@ -1,6 +1,8 @@
+require('dotenv').config()
 const cors = require('cors')
 const express = require('express')
 var morgan = require('morgan')
+
 
 const app = express()
 
@@ -16,7 +18,9 @@ morgan.token('body', (req, res) => JSON.stringify(req.body))
 // HTTP request logger middleware
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
+const Person = require("./models/person")
 
+/*
 let persons = [
     { 
       "id": "1",
@@ -39,6 +43,10 @@ let persons = [
       "number": "39-23-6423122"
     }
 ]
+  */
+let persons = []
+
+
 // Helpers
 function generateRandomId() {
     let minimum = 10
@@ -70,7 +78,11 @@ app.get('/info', (request, response) => {
     response.send(`<h1>Phonebook has ${persons.length} persons!</h1><p>${request_datetime}</p>`)
 })
 
-app.get('/api/persons', (request, response) => response.json(persons))
+app.get('/api/persons', (request, response) => {
+  Person.find({}).then(persons => {
+      response.json(persons)        
+    })  
+})
 
 app.get('/api/persons/:id', (request, response) => {
     const id = request.params.id
