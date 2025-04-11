@@ -110,21 +110,26 @@ app.post('/api/persons', (request, response) => {
         })
     }
     
-    const existingPerson = persons.find((p) => p.name === body.name)
-    if (existingPerson) {
-        return response.status(400).json({ 
-          error: 'The name already exists in the phonebook.' 
-        })
-    }
-    // Add new person
-    newPerson = {
-        id: getNewPersonId(),
-        name: body.name,
-        number: body.number,
-    }
-    persons = persons.concat(newPerson)
+    // const existingPerson = persons.find((p) => p.name === body.name)
+    // if (existingPerson) {
+    //     return response.status(400).json({ 
+    //       error: 'The name already exists in the phonebook.' 
+    //     })
+    // }
+    // // Add new person
+    // newPerson = {
+    //     id: getNewPersonId(),
+    //     name: body.name,
+    //     number: body.number,
+    // }
+    // persons = persons.concat(newPerson)
+    // response.json(newPerson)
     
-    response.json(newPerson)
+    const newPerson = new Person({
+      name: body.name,
+      number: body.number
+    })
+    newPerson.save().then(savedPerson => response.json(savedPerson))
 })
 
 // Middleware for catching requests made to non-existent routes
