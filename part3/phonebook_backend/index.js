@@ -1,8 +1,10 @@
 require('dotenv').config()
 const cors = require('cors')
 const express = require('express')
-var morgan = require('morgan')
+const errorHandler = require('./middlewares/errorHandler');
+const ApiError = require("./utils/ApiError")
 
+var morgan = require('morgan')
 
 const app = express()
 
@@ -20,55 +22,31 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :b
 
 const Person = require("./models/person")
 
-/*
-let persons = [
-    { 
-      "id": "1",
-      "name": "Arto Hellas", 
-      "number": "040-123456"
-    },
-    { 
-      "id": "2",
-      "name": "Ada Lovelace", 
-      "number": "39-44-5323523"
-    },
-    { 
-      "id": "3",
-      "name": "Dan Abramov", 
-      "number": "12-43-234345"
-    },
-    { 
-      "id": "4",
-      "name": "Mary Poppendieck", 
-      "number": "39-23-6423122"
-    }
-]
-  */
 let persons = []
 
 
-// Helpers
-function generateRandomId() {
-    let minimum = 10
-    let maximum = 100000
-    return Math.floor(Math.random() * (maximum - minimum + 1)) + minimum;
-}
+// // Helpers
+// function generateRandomId() {
+//     let minimum = 10
+//     let maximum = 100000
+//     return Math.floor(Math.random() * (maximum - minimum + 1)) + minimum;
+// }
 
-function getNewPersonId()
-{
-    let newId = generateRandomId();
-    let newIdTaken = true;
-    while(newIdTaken) {
-        let person = persons.find(p => Number(p.id) === newId)
-        if(!person) {
-            newIdTaken=false            
-        } else {
-            newId = generateRandomId()
-        }
+// function getNewPersonId()
+// {
+//     let newId = generateRandomId();
+//     let newIdTaken = true;
+//     while(newIdTaken) {
+//         let person = persons.find(p => Number(p.id) === newId)
+//         if(!person) {
+//             newIdTaken=false            
+//         } else {
+//             newId = generateRandomId()
+//         }
         
-    }
-    return String(newId)
-}
+//     }
+//     return String(newId)
+// }
 
 // API endpoints
 app.get('/', (request, response) => response.send('<h1>Phonebook Back-end!</h1>'))  
@@ -78,12 +56,14 @@ app.get('/info', (request, response) => {
     response.send(`<h1>Phonebook has ${persons.length} persons!</h1><p>${request_datetime}</p>`)
 })
 
+// Get all entries
 app.get('/api/persons', (request, response) => {
   Person.find({}).then(persons => {
       response.json(persons)        
     })  
 })
 
+// Get details of a person
 app.get('/api/persons/:id', (request, response) => {
     const id = request.params.id
     const person = persons.find(p => p.id === id)
@@ -94,6 +74,7 @@ app.get('/api/persons/:id', (request, response) => {
     }
 })
 
+// Delete an entry
 app.delete('/api/persons/:id', (request, response) => {
     // const id = request.params.id
     // persons = persons.filter(person => person.id !== id)  
@@ -101,23 +82,23 @@ app.delete('/api/persons/:id', (request, response) => {
     Person.findByIdAndDelete(request.params.id)
     .then(result => {
       if(!result) {
-        response.status(400).json({ 
-          error: 'The entry could not be deleted from the phonebook.' 
-        })
+        return next(new ApiError(400, "The entry could not be deleted from the phonebook."))
+        // response.status(400).json({ 
+        //   error: 'The entry could not be deleted from the phonebook.' 
+        // })
       } else {
         response.status(204).end()
       }
     })
-    .catch(error => next(error))
+    .catch(error => next(new ApiError(500, error.message)))
 })
 
-app.post('/api/persons', (request, response) => {
+// Create a new entry
+app.post('/api/persons', (request, response, next) => {
     const body = request.body
 
     if (!body.name || !body.number) {
-        return response.status(400).json({ 
-          error: 'Name or number is missing.' 
-        })
+        return next(new ApiError(400, "You must enter both person's name and number"))
     }
     
     // const existingPerson = persons.find((p) => p.name === body.name)
@@ -150,14 +131,14 @@ const unknownEndpoint = (request, response) => {
 app.use(unknownEndpoint)
 
 //Error handler
-const errorHandler = (error, request, response, next) => {
-  console.log(error.message)
+// const errorHandler = (error, request, response, next) => {
+//   console.log(error.message)
 
-  if(error.name === "CastError") {
-    return response.status(400).send({ error: "Malformatted ID"})
-  }
-  next(error)
-}
+//   if(error.name === "CastError") {
+//     return response.status(400).send({ error: "Malformatted ID"})
+//   }
+//   next(error)
+// }
 app.use(errorHandler)
 
 // Server settings 
