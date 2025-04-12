@@ -123,6 +123,26 @@ app.post('/api/persons', (request, response, next) => {
     newPerson.save().then(savedPerson => response.json(savedPerson))
 })
 
+// Update an existing entry
+app.put("/api/persons/:id", (request, response, next) => {
+  const body = request.body
+
+  Person.findById(request.params.id)
+    .then(person => {
+      if (!person) {
+        return next(new ApiError(404, "The requested person does not exist."))
+      }
+
+      person.name = body.name
+      person.number = body.number
+
+      return person.save().then((updated) => {
+        response.json(updated)
+      })
+    })
+    .catch(error => next(error))  
+})
+
 // Middleware for catching requests made to non-existent routes
 const unknownEndpoint = (request, response) => {
     response.status(404).send({ error: 'unknown endpoint' })
