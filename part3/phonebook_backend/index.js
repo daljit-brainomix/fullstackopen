@@ -98,7 +98,6 @@ app.delete('/api/persons/:id', (request, response) => {
     // const id = request.params.id
     // persons = persons.filter(person => person.id !== id)  
     // response.status(204).end()
-    console.log("Deleting ... ")
     Person.findByIdAndDelete(request.params.id)
     .then(result => {
       if(!result) {
@@ -109,12 +108,7 @@ app.delete('/api/persons/:id', (request, response) => {
         response.status(204).end()
       }
     })
-    .catch(error => {
-      console.log(error)
-      return response.status(400).json({ 
-          error: 'The entry could not be deleted from the phonebook.' 
-      })
-    })
+    .catch(error => next(error))
 })
 
 app.post('/api/persons', (request, response) => {
@@ -154,6 +148,17 @@ const unknownEndpoint = (request, response) => {
   }
   
 app.use(unknownEndpoint)
+
+//Error handler
+const errorHandler = (error, request, response, next) => {
+  console.log(error.message)
+
+  if(error.name === "CastError") {
+    return response.status(400).send({ error: "Malformatted ID"})
+  }
+  next(error)
+}
+app.use(errorHandler)
 
 // Server settings 
 const PORT = process.env.PORT || 3001
