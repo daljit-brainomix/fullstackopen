@@ -52,8 +52,8 @@ let persons = []
 app.get('/', (request, response) => response.send('<h1>Phonebook Back-end!</h1>'))  
 
 app.get('/info', (request, response) => {    
-    const request_datetime = new Date()
-    response.send(`<h1>Phonebook has ${persons.length} persons!</h1><p>${request_datetime}</p>`)
+    const request_datetime = new Date()    
+    Person.countDocuments({}).then(count => response.send(`<h1>Phonebook has ${count} persons!</h1><p>${request_datetime}</p>`))
 })
 
 // Get all entries
@@ -64,14 +64,21 @@ app.get('/api/persons', (request, response) => {
 })
 
 // Get details of a person
-app.get('/api/persons/:id', (request, response) => {
+app.get('/api/persons/:id', (request, response, next) => {
     const id = request.params.id
-    const person = persons.find(p => p.id === id)
-    if(person) {
+    // const person = persons.find(p => p.id === id)
+    // if(person) {
+    //     response.json(person)
+    // } else {
+    //     response.status(404).end()
+    // }
+    Person.findById(id).then(person => {
+      if(!person) {
+        return next(new ApiError(404, "The requested person is not found."))
+      } else {
         response.json(person)
-    } else {
-        response.status(404).end()
-    }
+      }
+    }).catch(error => next(error))
 })
 
 // Delete an entry
