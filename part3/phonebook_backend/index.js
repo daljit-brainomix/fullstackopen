@@ -95,10 +95,26 @@ app.get('/api/persons/:id', (request, response) => {
 })
 
 app.delete('/api/persons/:id', (request, response) => {
-    const id = request.params.id
-    persons = persons.filter(person => person.id !== id)
-  
-    response.status(204).end()
+    // const id = request.params.id
+    // persons = persons.filter(person => person.id !== id)  
+    // response.status(204).end()
+    console.log("Deleting ... ")
+    Person.findByIdAndDelete(request.params.id)
+    .then(result => {
+      if(!result) {
+        response.status(400).json({ 
+          error: 'The entry could not be deleted from the phonebook.' 
+        })
+      } else {
+        response.status(204).end()
+      }
+    })
+    .catch(error => {
+      console.log(error)
+      return response.status(400).json({ 
+          error: 'The entry could not be deleted from the phonebook.' 
+      })
+    })
 })
 
 app.post('/api/persons', (request, response) => {
