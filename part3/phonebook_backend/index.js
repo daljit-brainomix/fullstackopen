@@ -82,7 +82,7 @@ app.get('/api/persons/:id', (request, response, next) => {
 })
 
 // Delete an entry
-app.delete('/api/persons/:id', (request, response) => {
+app.delete('/api/persons/:id', (request, response, next) => {
     // const id = request.params.id
     // persons = persons.filter(person => person.id !== id)  
     // response.status(204).end()
@@ -90,14 +90,11 @@ app.delete('/api/persons/:id', (request, response) => {
     .then(result => {
       if(!result) {
         return next(new ApiError(400, "The entry could not be deleted from the phonebook."))
-        // response.status(400).json({ 
-        //   error: 'The entry could not be deleted from the phonebook.' 
-        // })
       } else {
         response.status(204).end()
       }
     })
-    .catch(error => next(new ApiError(500, error.message)))
+    .catch(error => next(error))
 })
 
 // Create a new entry
