@@ -37,5 +37,12 @@ A production build for applications created with Vite can be created with the co
 
 `npm install dotenv`
 
-```
-```
+`npm install eslint @eslint/js --save-dev`
+
+`npx eslint --init`
+
+`https://eslint.style/packages/js`
+
+`npm install --save-dev @stylistic/eslint-plugin-js`
+
+`npx eslint index.js`
