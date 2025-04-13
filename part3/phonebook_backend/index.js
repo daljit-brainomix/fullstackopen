@@ -24,7 +24,6 @@ const Person = require("./models/person")
 
 let persons = []
 
-
 // // Helpers
 // function generateRandomId() {
 //     let minimum = 10
