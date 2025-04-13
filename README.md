@@ -46,3 +46,6 @@ A production build for applications created with Vite can be created with the co
 `npm install --save-dev @stylistic/eslint-plugin-js`
 
 `npx eslint index.js`
+
+`https://dev.to/nermineslimane/always-separate-app-and-server-files--1nc7`
+
