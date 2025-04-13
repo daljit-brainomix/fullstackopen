@@ -127,7 +127,9 @@ app.post('/api/persons', (request, response, next) => {
       name: body.name,
       number: body.number
     })
-    newPerson.save().then(savedPerson => response.json(savedPerson))
+    newPerson.save()
+    .then(savedPerson => response.json(savedPerson))
+    .catch(error => next(error))
 })
 
 // Update an existing entry

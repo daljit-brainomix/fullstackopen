@@ -80,7 +80,7 @@ const App = () => {
   }
   const showMessage = (message, type) => {
     setNotificationMessage({text: message, type: type})
-    setTimeout(() => setNotificationMessage(null), 5000)
+    setTimeout(() => setNotificationMessage(null), 8000)
   }
 
   const handleAddPerson = (event) => {
@@ -120,7 +120,7 @@ const App = () => {
         .updateEntry(updateId, updatedPerson)
         .then(returnedPerson => setPersons(persons.map(person => person.id === updateId ? returnedPerson : person)))
         .then(() => showMessage(`Successfully changed ${newName}, ${newNumber}`, "success"))
-        .catch(() => showMessage(`Information of ${newName}, ${newNumber} has already been removed from server`, "error"))
+        .catch(() => showMessage(`Information of ${newName}, ${newNumber} has already been removed from server.`, "error"))
 
     }
     else 
@@ -135,7 +135,10 @@ const App = () => {
         createEntry(newNameObject)
         .then(() => setPersons(persons.concat(newNameObject)))
         .then(() => showMessage(`Successfully added ${newName}, ${newNumber}`, "success"))
-        .catch(() => showMessage(`Information of ${newName}, ${newNumber} cannot be saved on server`, "error"))
+        .catch((error) => { 
+          // Information of ${newName}, ${newNumber} cannot be saved on server. 
+          showMessage(`${error.response.data.error}`, "error")
+      })
     }
     setNewName("")
     setNewNumber("")
