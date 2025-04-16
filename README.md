@@ -41,6 +41,30 @@ A production build for applications created with Vite can be created with the co
 
 `npx eslint --init`
 
+```
+@eslint/create-config: v1.8.1
+
+✔ What do you want to lint? · javascript
+✔ How would you like to use ESLint? · problems
+✔ What type of modules does your project use? · commonjs
+✔ Which framework does your project use? · none
+✔ Does your project use TypeScript? · no / yes
+✔ Where does your code run? · browser
+The config that you've selected requires the following dependencies:
+
+eslint, @eslint/js, globals
+✔ Would you like to install them now? · No / Yes
+✔ Which package manager do you want to use? · npm
+☕️Installing...
+added 1 package, changed 1 package, and audited 170 packages in 646ms
+
+39 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+Successfully created /home/dsingh/courses/fullstackopen/part4/blog/eslint.config.mjs file.
+```
+
 `https://eslint.style/packages/js`
 
 `npm install --save-dev @stylistic/eslint-plugin-js`

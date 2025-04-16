@@ -11,8 +11,8 @@ const app = express()
 logger.info(`Connecting to ${config.MONGODB_URI}`)
 // Connect to DB
 mongoose.connect(config.MONGODB_URI)
-.then(()=> logger.info('Connected to MongoDB'))
-.catch(() => logger.error('Failed to conenct to MongoDB'))
+  .then(() => logger.info('Connected to MongoDB'))
+  .catch(() => logger.error('Failed to conenct to MongoDB'))
 
 // Middleware to load FE
 app.use(express.static('dist'))
