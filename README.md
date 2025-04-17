@@ -73,3 +73,6 @@ Successfully created /home/dsingh/courses/fullstackopen/part4/blog/eslint.config
 
 `https://dev.to/nermineslimane/always-separate-app-and-server-files--1nc7`
 
+YouTube - Functional JavaScript
+`https://www.youtube.com/watch?v=BMUiFMZr7vk&list=PL0zVEGEvSaeEd9hlmCXrk5yUyqUag-n84`
+
