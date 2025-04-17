@@ -97,3 +97,14 @@ describe('most blogs', () => {
   })
 })
 
+describe('most blogs (Lodash)', () => {
+  test('of an empty blog list is null', () => {
+    assert.strictEqual(listHelper.mostBlogsLodash([]), null)
+  })
+  test('is the same author from the single blog array', () => {
+    assert.deepStrictEqual(listHelper.mostBlogsLodash([blogs[0]]), { author: 'Michael Chan', count: 1 })
+  })
+  test('is the author with most entries in a mulitple blog items array.', () => {
+    assert.deepStrictEqual(listHelper.mostBlogsLodash(blogs), { author: 'Robert C. Martin', count: 3 })
+  })
+})
