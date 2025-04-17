@@ -76,3 +76,10 @@ Successfully created /home/dsingh/courses/fullstackopen/part4/blog/eslint.config
 YouTube - Functional JavaScript
 `https://www.youtube.com/watch?v=BMUiFMZr7vk&list=PL0zVEGEvSaeEd9hlmCXrk5yUyqUag-n84`
 
+Transform list into something else
+map - takes an array and transform that into an array of the same length with each individual items transformed.
+filter -  tranforms an array to a smaller array
+reject - Same as filter but inverted.
+
+find -  Same as filter, but only returns first item. Transforms array to single item.
+reduce - Traverses through all items/objects of an array 
