@@ -16,4 +16,22 @@ const favoriteBlog = (blogs) => {
   return blogs.length === 0 ? null : blogs.reduce(reducer)
 }
 
-module.exports = { dummy, totalLikes, favoriteBlog }
+const mostBlogs = (blogs) => {
+  if(blogs.length === 0) {
+    return null
+  }
+
+  const authorCount = {}
+  blogs.forEach(blog => {
+    authorCount[blog.author] = (authorCount[blog.author] || 0) + 1
+  })
+
+  const reducer = (popularAuthor, currentAuthorArr) => {
+    const [author, count] = currentAuthorArr
+    return count > popularAuthor.count ? { author: author, count: count } : popularAuthor
+  }
+  return Object.entries(authorCount).reduce(reducer, { author: null, count: 0 })
+}
+
+
+module.exports = { dummy, totalLikes, favoriteBlog, mostBlogs }
