@@ -4,12 +4,14 @@ const assert = require('node:assert')
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 
-const api = supertest(app)
 const app = require('../app')
+const api = supertest(app)
 const helper = require('./test_helper')
+const Blog = require('../models/blog')
 
 beforeEach(async () => {
-// Some code here
+  await Blog.deleteMany({})
+  await Blog.insertMany(helper.initialBlogs)
 })
 
 describe('blogs api', () => {
@@ -18,6 +20,12 @@ describe('blogs api', () => {
       .expect(200)
       .expect('Content-Type', /application\/json/)
   })
+  test('returns correct amount of blog posts', async () => {
+    const response = await api.get('/api/blogs')
+
+    assert.strictEqual(response.body.length, helper.initialBlogs.length)
+  })
+
 })
 
 
