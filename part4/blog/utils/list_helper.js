@@ -42,8 +42,25 @@ const mostBlogsLodash = (blogs) => {
 
   const authorCount = _.countBy(blogs, 'author')
   const maxAuthorName = _.maxBy(Object.keys(authorCount), author => authorCount[author])
-  return { author: maxAuthorName, count: authorCount[maxAuthorName]}
+  return { author: maxAuthorName, count: authorCount[maxAuthorName] }
+}
+
+const mostLikedAuthor = (blogs) => {
+  if(blogs.length === 0) {
+    return null
+  }
+
+  // const authorLiked = {}
+  // blogs.forEach(blog => {
+  //   authorLiked[blog.author] = (authorLiked[blog.author] || 0) + blog.likes
+  // })
+
+  const authorLikes = _.map(_.groupBy(blogs, 'author'), (authorBlogs, authorName) => {
+    // return { 'author': authorName, 'likes': authorBlogs.reduce((blogLikes, blog) => blogLikes + blog.likes, 0) }
+    return { 'author': authorName, 'likes': _.sumBy(authorBlogs, 'likes') }
+  })
+  return _.maxBy(authorLikes, 'likes')
 }
 
 
-module.exports = { dummy, totalLikes, favoriteBlog, mostBlogs, mostBlogsLodash }
+module.exports = { dummy, totalLikes, favoriteBlog, mostBlogs, mostBlogsLodash, mostLikedAuthor }
