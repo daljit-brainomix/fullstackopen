@@ -6,7 +6,7 @@ const supertest = require('supertest')
 
 const app = require('../app')
 const api = supertest(app)
-const helper = require('./test_helper')
+const helper = require('./api_helper')
 const Blog = require('../models/blog')
 
 beforeEach(async () => {
@@ -20,10 +20,17 @@ describe('blogs api', () => {
       .expect(200)
       .expect('Content-Type', /application\/json/)
   })
+
   test('returns correct amount of blog posts', async () => {
     const response = await api.get('/api/blogs')
 
     assert.strictEqual(response.body.length, helper.initialBlogs.length)
+  })
+
+  test('has unique identifier named id', async () => {
+    const blogsData = await helper.blogsInDb()
+
+    assert('id' in blogsData[0])
   })
 
 })
