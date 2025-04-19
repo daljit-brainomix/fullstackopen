@@ -52,7 +52,27 @@ describe('blogs api', () => {
     const blogTitles = blogsAfterAdding.map((blog) => blog.title)
     assert(blogTitles.includes(newBlog.title))
   })
+  test('sets likes to zero when it is missing', async () => {
+    const newBlog = {
+      title: 'A great blog by someone',
+      author: 'Nnagi Noya',
+      url: 'https://greatblogs.com/en/',
+    }
 
+    const apiResponse = await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+    const blogsAfterAdding = await helper.blogsInDb()
+    assert.strictEqual(blogsAfterAdding.length, helper.initialBlogs.length + 1)
+
+    assert.strictEqual(apiResponse.body.likes, 0)
+
+    const blogByNnagi = await helper.blogsInDb({ author: 'Nnagi Noya' })
+    assert.strictEqual(blogByNnagi[0].likes, 0)
+  })
 })
 
 

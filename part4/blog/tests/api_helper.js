@@ -27,8 +27,8 @@ const initialBlogs = [
   },
 ]
 
-const blogsInDb = async () => {
-  const blogs = await Blog.find({})
+const blogsInDb = async (query = {}) => {
+  const blogs = await Blog.find(query)
   return blogs.map(blog => blog.toJSON())
 }
 
