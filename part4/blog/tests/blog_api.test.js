@@ -32,6 +32,26 @@ describe('blogs api', () => {
 
     assert('id' in blogsData[0])
   })
+  test('creates new blog successfully', async () => {
+    const newBlog = {
+      title: 'Full Stack Open',
+      author: 'Matti Luukkainen',
+      url: 'https://fullstackopen.com/en/',
+      likes: 1000000
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+    const blogsAfterAdding = await helper.blogsInDb()
+    assert.strictEqual(blogsAfterAdding.length, helper.initialBlogs.length + 1)
+
+    const blogTitles = blogsAfterAdding.map((blog) => blog.title)
+    assert(blogTitles.includes(newBlog.title))
+  })
 
 })
 
