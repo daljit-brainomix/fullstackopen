@@ -1,3 +1,4 @@
+const mongoose = require('mongoose')
 const Blog = require('../models/blog')
 
 const initialBlogs = [
@@ -26,10 +27,13 @@ const initialBlogs = [
     likes: 10,
   },
 ]
+const nonExistingId = async () => {
+  return new mongoose.Types.ObjectId()
+}
 
 const blogsInDb = async (query = {}) => {
   const blogs = await Blog.find(query)
   return blogs.map(blog => blog.toJSON())
 }
 
-module.exports = { initialBlogs, blogsInDb }
+module.exports = { initialBlogs, blogsInDb, nonExistingId }

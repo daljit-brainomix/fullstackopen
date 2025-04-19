@@ -12,4 +12,10 @@ blogRouter.post('/', async (request, response) => {
   response.status(201).json(savedBlog)
 })
 
+blogRouter.delete('/:id', async (request, response) => {
+  const deletedBlog = await Blog.findByIdAndDelete(request.params.id)
+  // I've just chosen to send 404 NotFound, but also considered using 400 BadRequest.
+  response.status(!deletedBlog ? 404 : 204).end()
+})
+
 module.exports = blogRouter
