@@ -73,6 +73,28 @@ describe('blogs api', () => {
     const blogByNnagi = await helper.blogsInDb({ author: 'Nnagi Noya' })
     assert.strictEqual(blogByNnagi[0].likes, 0)
   })
+  test('raises error when the url is missing', async () => {
+    const newBlog = {
+      title: 'Blog missing the URL',
+      author: 'Some Author',
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+  })
+  test('raises error when the title is missing', async () => {
+    const newBlog = {
+      author: 'Some Author',
+      url: 'https://www.google.com/'
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+  })
 })
 
 
