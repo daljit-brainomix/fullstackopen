@@ -125,6 +125,32 @@ describe('when there are initially some blogs saved', () => {
     })
 
   })
+  describe('updation of a blog', () => {
+
+    test('succeeds with a valid id', async () => {
+      const blogsAtStart = await helper.blogsInDb()
+      const blogToUpdate = blogsAtStart[0]
+      const updateData = { likes: 15 }
+
+      await api.put(`/api/blogs/${blogToUpdate.id}`).send(updateData).expect(200)
+
+      const blogsAfterUpdation = await helper.blogsInDb()
+      const updatedBlog = blogsAfterUpdation.find(b => b.id === blogToUpdate.id)
+
+      assert.strictEqual(updatedBlog.likes, 15)
+    })
+
+    test('fails with 404 for a non-existing id', async () => {
+      const nonExistingId = await helper.nonExistingId()
+      await api.put(`/api/blogs/${nonExistingId}`).expect(404)
+    })
+
+    test('fails with 400 for an invalid id', async () => {
+      const invalidId = '2343sfsd'
+      await api.put(`/api/blogs/${invalidId}`).expect(400)
+    })
+
+  })
 })
 
 // https://nodejs.org/api/test.html#afterfn-options

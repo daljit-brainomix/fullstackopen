@@ -12,6 +12,20 @@ blogRouter.post('/', async (request, response) => {
   response.status(201).json(savedBlog)
 })
 
+blogRouter.put('/:id', async (request, response) => {
+  const { likes } = request.body
+  const blogToUpdate = await Blog.findById(request.params.id)
+
+  if(!blogToUpdate) {
+    return response.status(404).end()
+  }
+
+  blogToUpdate.likes = likes
+
+  const updatedBlog = await blogToUpdate.save()
+  response.json(updatedBlog)
+})
+
 blogRouter.delete('/:id', async (request, response) => {
   const deletedBlog = await Blog.findByIdAndDelete(request.params.id)
   // I've just chosen to send 404 NotFound, but also considered using 400 BadRequest.
