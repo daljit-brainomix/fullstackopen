@@ -3,7 +3,10 @@ const express = require('express')
 const mongoose = require('mongoose')
 
 const config = require('./utils/config')
+
+const usersRouter = require('./controllers/users')
 const blogRouter = require('./controllers/blogs')
+
 const middleware = require('./utils/middleware')
 const logger = require('./utils/logger')
 
@@ -23,6 +26,7 @@ app.use(express.json())
 app.use(middleware.requestLogger)
 
 // Register API routes
+app.use('/api/users', usersRouter)
 app.use('/api/blogs', blogRouter)
 
 // Handle un-registered routes

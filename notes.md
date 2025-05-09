@@ -125,6 +125,10 @@ Second option is to run tests of a specific file. `npm test -- tests/note_api.te
 
 To run all of the tests that contain notes in their name `npm run test -- --test-name-pattern="notes"`
 
+https://nodejs.org/api/test.html#test-runner-execution-model
+
+NB if you decide to define tests on multiple files, you should note that by default each test file is executed in its own process (see Test execution model in the documentation). The consequence of this is that different test files are executed at the same time. Since the tests share the same database, simultaneous execution may cause problems, which can be avoided by executing the tests with the option --test-concurrency=1, i.e. defining them to be executed sequentially.
+
 -----------------------------------------------------
 
 Async/await unclutters the code a bit, but the 'price' is the try/catch structure required for catching exceptions. All of the route handlers follow the same structure
@@ -145,3 +149,28 @@ Because of the library, we do not need the next(exception) call anymore. The lib
 ---------------------------------------------------
 
 Promise.all executes the promises it receives in parallel. If the promises need to be executed in a particular order, this will be problematic. In situations like this, the operations can be executed inside of a for...of block, that guarantees a specific execution order.
+
+---------------------------------------------------
+
+`https://en.wikipedia.org/wiki/Cryptographic_hash_function`
+
+npm install bcrypt
+
+https://codahale.com/how-to-safely-store-a-password/
+
+https://github.com/kelektiv/node.bcrypt.js/#a-note-on-rounds
+
+When using the uniqueness index. If there are already documents in the database that violate the uniqueness condition, no index will be created. So when adding a uniqueness index, make sure that the database is in a healthy state! https://dev.to/akshatsinghania/mongoose-unique-not-working-16bf
+
+Also, Mongoose validations do not detect the index violation, and instead of ValidationError they return an error of type MongoServerError
+
+---------------------------------------------------
+
+npm install jsonwebtoken
+
+If the application has multiple interfaces requiring identification, JWT's validation should be separated into its own middleware. An existing library like express-jwt could also be used.
+https://www.npmjs.com/package/express-jwt
+
+
+### MongoDB
+https://cloud.mongodb.com/
