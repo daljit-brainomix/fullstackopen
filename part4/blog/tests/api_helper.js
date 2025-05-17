@@ -1,5 +1,31 @@
+// const bcrypt = require('bcrypt')
 const mongoose = require('mongoose')
 const Blog = require('../models/blog')
+const User = require('../models/user')
+
+const nonExistingId = async () => {
+  // a MongoDB native ObjectId
+  return new mongoose.Types.ObjectId()
+}
+
+// const getPasswordHash = async (password) => {
+//     const saltRounds = 10
+//     const passwordHash = await bcrypt.hash(password, saltRounds)
+//     return passwordHash
+// }
+
+const initialUsers = [
+  {
+    username: 'testuser',
+    name: 'Test User',
+    passwordHash: '$2b$10$ilnruiQXSMtt8cymyBMiiuxh8xR1ER8V6.ejjhohvOuQPZxtzw78C' //fullstackopen
+  }
+]
+
+const usersInDb = async (query = {}) => {
+  const users = await User.find(query)
+  return users.map(user => user.toJSON())
+}
 
 const initialBlogs = [
   {
@@ -27,8 +53,15 @@ const initialBlogs = [
     likes: 10,
   },
 ]
-const nonExistingId = async () => {
-  return new mongoose.Types.ObjectId()
+
+const initialBlogsWithUser = async () => {
+  const users = await usersInDb()
+  const firstUser = users[0]
+
+  return initialBlogs.map(blog => ({
+    ...blog,
+    user: firstUser._id,
+  }))
 }
 
 const blogsInDb = async (query = {}) => {
@@ -36,4 +69,11 @@ const blogsInDb = async (query = {}) => {
   return blogs.map(blog => blog.toJSON())
 }
 
-module.exports = { initialBlogs, blogsInDb, nonExistingId }
+module.exports = {
+  initialBlogs,
+  initialBlogsWithUser,
+  blogsInDb,
+  nonExistingId,
+  initialUsers,
+  usersInDb,
+}
