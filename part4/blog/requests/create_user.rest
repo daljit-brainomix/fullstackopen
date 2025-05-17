@@ -1,10 +1,18 @@
 POST http://localhost:3003/api/users
 Content-Type: application/json
 
+# {
+#     "username": "tommy",
+#     "name": "Tom",
+#     "password": "fullstackopen"
+#     //$2b$10$ilnruiQXSMtt8cymyBMiiuxh8xR1ER8V6.ejjhohvOuQPZxtzw78C
+#     //"6808c79120406f543df7e943"
+# }
+
 {
     "username": "tommy",
     "name": "Tom",
-    "password": "fullstackopen"
+    "password": "fu"
     //$2b$10$ilnruiQXSMtt8cymyBMiiuxh8xR1ER8V6.ejjhohvOuQPZxtzw78C
     //"6808c79120406f543df7e943"
 }
