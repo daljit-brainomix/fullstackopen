@@ -1,21 +1,34 @@
+const jwt = require('jsonwebtoken')
 const blogRouter = require('express').Router()
 const Blog = require('../models/blog')
 const User = require('../models/user')
 
 // NOTE: async errors are caught by express-async-errors (defined in app.js)
 
+const getTokenFrom = request => {
+  const authorization = request.get('authorization')
+  if (authorization && authorization.startsWith('Bearer ')) {
+    return authorization.replace('Bearer ', '')
+  }
+}
+
 blogRouter.get('/', async (request, response) => response.json(await Blog.find({}).populate('user', { username: 1, name: 1 })))
 
 blogRouter.post('/', async (request, response) => {
-  // Just hard code the creater for now to complete the exercise
-  let findUsername = 'tommy'
-  if(process.env.NODE_ENV === 'test') {
-    findUsername = 'testuser'
+  const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)
+  if (!decodedToken.id) {
+    return response.status(401).json({ error: 'token invalid' })
   }
 
-  const dbUser = await User.findOne({ username: findUsername })
+  // Just hard code the creater for now to complete the exercise
+  // let findUsername = 'tommy'
+  // if(process.env.NODE_ENV === 'test') {
+  //   findUsername = 'testuser'
+  // }
+  // const dbUser = await User.findOne({ username: findUsername })
+  const dbUser = await User.findById(decodedToken.id)
   if (!dbUser) {
-    return response.status(404).json({ error: 'User not found' })
+    return response.status(404).json({ error: 'UserId missing or not valid' })
   }
   const blog = new Blog({ ...request.body, user: dbUser._id })
 

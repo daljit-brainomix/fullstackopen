@@ -1,9 +1,10 @@
 POST http://localhost:3003/api/blogs 
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRvbW15IiwiaWQiOiI2ODI5MDYzZmRjZDE2NDI2OGIzYTY0YzkiLCJpYXQiOjE3NDc1OTAwODF9.EWJSv8NENJqvnrpdBwDPeqIxv_aA2hp6AmXjietJ0II
 
 {
-    "title": "REST client is a handy tool", 
-    "author": "Mr Great Mluukkai", 
-    "url": "https://www.greatmluukkai.com", 
-    "likes": 1000
+    "title": "Blog List Expansion, step 7", 
+    "author": "Matt Mluukkai", 
+    "url": "https://fullstackopen.com/en/part4/token_authentication#exercises-4-15-4-23", 
+    "likes": 10000
 }
