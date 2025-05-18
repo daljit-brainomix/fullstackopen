@@ -4,6 +4,7 @@ const mongoose = require('mongoose')
 
 const config = require('./utils/config')
 
+const loginRouter = require('./controllers/login')
 const usersRouter = require('./controllers/users')
 const blogRouter = require('./controllers/blogs')
 
@@ -26,6 +27,7 @@ app.use(express.json())
 app.use(middleware.requestLogger)
 
 // Register API routes
+app.use('/api/login', loginRouter)
 app.use('/api/users', usersRouter)
 app.use('/api/blogs', blogRouter)
 
