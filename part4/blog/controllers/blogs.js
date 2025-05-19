@@ -5,27 +5,31 @@ const User = require('../models/user')
 
 // NOTE: async errors are caught by express-async-errors (defined in app.js)
 
-blogRouter.get('/', async (request, response) => response.json(await Blog.find({}).populate('user', { username: 1, name: 1 })))
-
-blogRouter.post('/', async (request, response) => {
+const getDecodedTokenFromRequest = async (request) => {
   let decodedToken
   try {
     decodedToken = request.token ? jwt.verify(request.token, process.env.SECRET) : null
   // eslint-disable-next-line no-unused-vars
   } catch(error) {
-    return response.status(401).json({ error: 'token invalid or malformed' })
+    decodedToken = null
   }
 
+  if (!decodedToken || !decodedToken.id) {
+    decodedToken = null
+  }
+  return decodedToken
+}
+
+blogRouter.get('/', async (request, response) => response.json(await Blog.find({}).populate('user', { username: 1, name: 1 })))
+
+blogRouter.post('/', async (request, response) => {
+
+  const decodedToken = await getDecodedTokenFromRequest(request)
   if (!decodedToken || !decodedToken.id) {
     return response.status(401).json({ error: 'token invalid' })
   }
 
-  // Just hard code the creater for now to complete the exercise
-  // let findUsername = 'tommy'
-  // if(process.env.NODE_ENV === 'test') {
-  //   findUsername = 'testuser'
-  // }
-  // const dbUser = await User.findOne({ username: findUsername })
+  // decodedToken contents are { username: 'tommy', id: '6829063fdcd164268b3a64c9', iat: 1747590081 } where id is user's id.
   const dbUser = await User.findById(decodedToken.id)
   if (!dbUser) {
     return response.status(404).json({ error: 'UserId missing or not valid' })
@@ -57,9 +61,25 @@ blogRouter.put('/:id', async (request, response) => {
 })
 
 blogRouter.delete('/:id', async (request, response) => {
-  const deletedBlog = await Blog.findByIdAndDelete(request.params.id)
-  // I've just chosen to send 404 NotFound, but also considered using 400 BadRequest.
-  response.status(!deletedBlog ? 404 : 204).end()
+
+  const decodedToken = await getDecodedTokenFromRequest(request)
+  if (!decodedToken || !decodedToken.id) {
+    return response.status(401).json({ error: 'token invalid' })
+  }
+
+  const blogToDelete = await Blog.findById(request.params.id)
+
+  if (!blogToDelete) {
+    return response.status(404).json({ error: 'blog not found' })
+  }
+
+  if (blogToDelete.user.toString() !== decodedToken.id) {
+    return response.status(401).json({ error: 'user not authorized to delete this blog' })
+  }
+
+  await blogToDelete.deleteOne()
+
+  response.status(204).end()
 })
 
 module.exports = blogRouter

@@ -1,0 +1,9 @@
+# Invalid user so this request should fail
+DELETE http://localhost:3003/api/blogs/682b0a83bcd8115838259636
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImppbW15IiwiaWQiOiI2ODJiMTEwMTNhMTllM2JiZjljMjlkMzYiLCJpYXQiOjE3NDc2NTI5MDMsImV4cCI6MTc0NzY1NjUwM30.iqRzq6uQR35z6HtL97UoLgBxHMeZDgKE3yomqy_xCdA
+
+###
+
+# Valid request as token user is the owner of this blog entry
+DELETE http://localhost:3003/api/blogs/682b0a83bcd8115838259636
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRvbW15IiwiaWQiOiI2ODI5MDYzZmRjZDE2NDI2OGIzYTY0YzkiLCJpYXQiOjE3NDc2NTMzNTQsImV4cCI6MTc0NzY1Njk1NH0.J0NapfU0kELqtbtJVrVGf_Iz78NmkNuHTVd4F3Cctlc
