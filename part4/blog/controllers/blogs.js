@@ -5,18 +5,18 @@ const User = require('../models/user')
 
 // NOTE: async errors are caught by express-async-errors (defined in app.js)
 
-const getTokenFrom = request => {
-  const authorization = request.get('authorization')
-  if (authorization && authorization.startsWith('Bearer ')) {
-    return authorization.replace('Bearer ', '')
-  }
-}
-
 blogRouter.get('/', async (request, response) => response.json(await Blog.find({}).populate('user', { username: 1, name: 1 })))
 
 blogRouter.post('/', async (request, response) => {
-  const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)
-  if (!decodedToken.id) {
+  let decodedToken
+  try {
+    decodedToken = request.token ? jwt.verify(request.token, process.env.SECRET) : null
+  // eslint-disable-next-line no-unused-vars
+  } catch(error) {
+    return response.status(401).json({ error: 'token invalid or malformed' })
+  }
+
+  if (!decodedToken || !decodedToken.id) {
     return response.status(401).json({ error: 'token invalid' })
   }
 

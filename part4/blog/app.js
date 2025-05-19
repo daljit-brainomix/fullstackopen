@@ -25,6 +25,8 @@ app.use(express.static('dist'))
 app.use(express.json())
 // Middleware to log requests
 app.use(middleware.requestLogger)
+// Middleware to extract authorization token
+app.use(middleware.tokenExtractor)
 
 // Register API routes
 app.use('/api/login', loginRouter)
