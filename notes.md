@@ -129,6 +129,7 @@ https://nodejs.org/api/test.html#test-runner-execution-model
 
 NB if you decide to define tests on multiple files, you should note that by default each test file is executed in its own process (see Test execution model in the documentation). The consequence of this is that different test files are executed at the same time. Since the tests share the same database, simultaneous execution may cause problems, which can be avoided by executing the tests with the option --test-concurrency=1, i.e. defining them to be executed sequentially.
 
+`npm test -- tests/blog_api.test.js --test-concurrency=1`
 -----------------------------------------------------
 
 Async/await unclutters the code a bit, but the 'price' is the try/catch structure required for catching exceptions. All of the route handlers follow the same structure

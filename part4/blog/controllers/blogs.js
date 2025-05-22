@@ -1,40 +1,30 @@
-const jwt = require('jsonwebtoken')
+// const jwt = require('jsonwebtoken')
 const blogRouter = require('express').Router()
 const middleware = require('../utils/middleware')
 const Blog = require('../models/blog')
-const User = require('../models/user')
+// const User = require('../models/user')
+// const { nonExistingId } = require('../tests/api_helper')
 
 // NOTE: async errors are caught by express-async-errors (defined in app.js)
 
-const getDecodedTokenFromRequest = async (request) => {
-  let decodedToken
-  try {
-    decodedToken = request.token ? jwt.verify(request.token, process.env.SECRET) : null
-  // eslint-disable-next-line no-unused-vars
-  } catch(error) {
-    decodedToken = null
-  }
+// const getDecodedTokenFromRequest = async (request) => {
+//   let decodedToken
+//   try {
+//     decodedToken = request.token ? jwt.verify(request.token, process.env.SECRET) : null
+//   // eslint-disable-next-line no-unused-vars
+//   } catch(error) {
+//     decodedToken = null
+//   }
 
-  if (!decodedToken || !decodedToken.id) {
-    decodedToken = null
-  }
-  return decodedToken
-}
+//   if (!decodedToken || !decodedToken.id) {
+//     decodedToken = null
+//   }
+//   return decodedToken
+// }
 
 blogRouter.get('/', async (request, response) => response.json(await Blog.find({}).populate('user', { username: 1, name: 1 })))
 
 blogRouter.post('/', middleware.userExtractor, async (request, response) => {
-
-  // const decodedToken = await getDecodedTokenFromRequest(request)
-  // if (!decodedToken || !decodedToken.id) {
-  //   return response.status(401).json({ error: 'token invalid' })
-  // }
-
-  // // decodedToken contents are { username: 'tommy', id: '6829063fdcd164268b3a64c9', iat: 1747590081 } where id is user's id.
-  // const dbUser = await User.findById(decodedToken.id)
-  // if (!dbUser) {
-  //   return response.status(404).json({ error: 'UserId missing or not valid' })
-  // }
 
   const blog = new Blog({ ...request.body, user: request.user.id })
 
@@ -63,11 +53,6 @@ blogRouter.put('/:id', async (request, response) => {
 })
 
 blogRouter.delete('/:id', middleware.userExtractor, async (request, response) => {
-
-  // const decodedToken = await getDecodedTokenFromRequest(request)
-  // if (!decodedToken || !decodedToken.id) {
-  //   return response.status(401).json({ error: 'token invalid' })
-  // }
 
   const blogToDelete = await Blog.findById(request.params.id)
 

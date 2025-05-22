@@ -25,9 +25,9 @@ const userExtractor = async (request, response, next) => {
   }
 
   const token = authHeader.substring(7).trim()
-
   try {
     const decodedToken = jwt.verify(token, process.env.SECRET)
+    // console.log('DecToken is:', decodedToken)
 
     if (!decodedToken.id) {
       return response.status(401).json({ error: 'token missing or invalid' })
@@ -39,7 +39,7 @@ const userExtractor = async (request, response, next) => {
     request.user = user
 
     next()
-  } catch (error) {
+  } catch {
     return response.status(401).json({ error: 'token invalid or expired' })
   }
 }

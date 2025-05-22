@@ -10,12 +10,17 @@ const helper = require('./api_helper')
 const Blog = require('../models/blog')
 const User = require('../models/user')
 
+let authToken
+
 beforeEach(async () => {
   await User.deleteMany({})
   await User.insertMany(helper.initialUsers)
 
   await Blog.deleteMany({})
   await Blog.insertMany(await helper.initialBlogsWithUser())
+
+  const loginResponse = await api.post('/api/login').send({ username: 'testuser', password: 'fullstackopen' })
+  authToken = loginResponse.body.token
 })
 
 describe('when there are initially some blogs saved', () => {
@@ -51,7 +56,10 @@ describe('when there are initially some blogs saved', () => {
       }
 
       await api
-        .post('/api/blogs').send(newBlog).expect(201)
+        .post('/api/blogs')
+        .set('authorization', `Bearer ${authToken}`)
+        .send(newBlog)
+        .expect(201)
         .expect('Content-Type', /application\/json/)
 
       const blogsAfterAdding = await helper.blogsInDb()
@@ -68,7 +76,10 @@ describe('when there are initially some blogs saved', () => {
         url: 'https://greatblogs.com/en/',
       }
 
-      const apiResponse = await api.post('/api/blogs').send(newBlog).expect(201)
+      const apiResponse = await api.post('/api/blogs')
+        .set('authorization', `Bearer ${authToken}`)
+        .send(newBlog)
+        .expect(201)
         .expect('Content-Type', /application\/json/)
 
       const blogsAfterAdding = await helper.blogsInDb()
@@ -90,7 +101,7 @@ describe('when there are initially some blogs saved', () => {
         author: 'Some Author',
       }
 
-      await api.post('/api/blogs').send(newBlog).expect(400)
+      await api.post('/api/blogs').set('authorization', `Bearer ${authToken}`).send(newBlog).expect(400)
     })
 
     test('fails with status code 404 when the title is missing', async () => {
@@ -99,7 +110,7 @@ describe('when there are initially some blogs saved', () => {
         url: 'https://www.google.com/'
       }
 
-      await api.post('/api/blogs').send(newBlog).expect(400)
+      await api.post('/api/blogs').set('authorization', `Bearer ${authToken}`).send(newBlog).expect(400)
     })
   })
 
@@ -109,7 +120,7 @@ describe('when there are initially some blogs saved', () => {
       const blogsAtStart = await helper.blogsInDb()
       const blogToDelete = blogsAtStart[0]
 
-      await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204)
+      await api.delete(`/api/blogs/${blogToDelete.id}`).set('authorization', `Bearer ${authToken}`).expect(204)
 
       const blogsAfterDeletion = await helper.blogsInDb()
 
@@ -120,12 +131,12 @@ describe('when there are initially some blogs saved', () => {
 
     test('fails with 404 for a non-existing id', async () => {
       const nonExistingId = await helper.nonExistingId()
-      await api.delete(`/api/blogs/${nonExistingId}`).expect(404)
+      await api.delete(`/api/blogs/${nonExistingId}`).set('authorization', `Bearer ${authToken}`).expect(404)
     })
 
     test('fails with 400 for an invalid id', async () => {
       const invalidId = '2343sfsd'
-      await api.delete(`/api/blogs/${invalidId}`).expect(400)
+      await api.delete(`/api/blogs/${invalidId}`).set('authorization', `Bearer ${authToken}`).expect(400)
     })
 
   })

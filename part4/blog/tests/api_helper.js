@@ -60,7 +60,7 @@ const initialBlogsWithUser = async () => {
 
   return initialBlogs.map(blog => ({
     ...blog,
-    user: firstUser._id,
+    user: firstUser.id,
   }))
 }
 
