@@ -1,0 +1,9 @@
+POST http://localhost:3003/api/users
+Content-Type: application/json
+
+{
+    "username": "jimmy",
+    "name": "Jim",
+    "password": "fullstackopen"
+    // "6828fa1f39baf9383422f69b"
+}
