@@ -3,8 +3,8 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRvbW15IiwiaWQiOiI2ODI5MDYzZmRjZDE2NDI2OGIzYTY0YzkiLCJpYXQiOjE3NDc1OTAwODF9.EWJSv8NENJqvnrpdBwDPeqIxv_aA2hp6AmXjietJ0II
 
 {
-    "title": "Blog List Expansion, step 7", 
-    "author": "Matt Mluukkai", 
+    "title": "Lorem ipsum dorel ...", 
+    "author": "Simon Cowell", 
     "url": "https://fullstackopen.com/en/part4/token_authentication#exercises-4-15-4-23", 
-    "likes": 10000
+    "likes": 1000
 }
