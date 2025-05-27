@@ -3,12 +3,14 @@ import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import Notification from './components/Notification'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [user, setUser] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null)
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [user, setUser] = useState(null)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -16,13 +18,24 @@ const App = () => {
     )  
   }, [])
 
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+    }
+  }, [])
+
   const handleLogin = async (event) => {
     event.preventDefault()
     
-    console.log("Logging in with", username, password)
-
     try {
       const user = await loginService.login({ username, password })
+      
+      window.localStorage.setItem(
+        'loggedBlogappUser', JSON.stringify(user)
+      )
+    
       setUser(user)
       setUsername('')
       setPassword('')
@@ -34,9 +47,24 @@ const App = () => {
     }
   }
 
+  const handleLogout = async (event) => {
+    event.preventDefault()
+    
+    window.localStorage.removeItem('loggedBlogappUser')
+    
+    setUser(null)
+    
+    setErrorMessage('You are logged out now.')
+    setTimeout(() => {
+      setErrorMessage(null)
+    }, 5000)
+        
+  }
 
   return (
     <div>
+      <Notification message={errorMessage} />
+
       <h2>Login</h2>
       {
         user === null ?
@@ -49,6 +77,7 @@ const App = () => {
           /> :
           <div>
             <p>{user.name} logged-in</p>
+            <button onClick={handleLogout}>logout</button>
           </div>
       }
       <hr />
