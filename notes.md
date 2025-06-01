@@ -175,3 +175,12 @@ https://www.npmjs.com/package/express-jwt
 
 ### MongoDB
 https://cloud.mongodb.com/
+
+
+### Local storage
+
+https://developer.mozilla.org/en-US/docs/Web/API/Storage 
+
+Local Storage is a key-value database in the browser. Values in the local storage are persisted even when the page is re-rendered. The storage is origin-specific so each web application has its own storage. Values saved to the storage are `DOMstrings` (https://docs.w3cub.com/dom/domstring), so we cannot save a JavaScript object as it is. The object has to be parsed to JSON first, with the method `JSON.stringify`. Correspondingly, when a JSON object is read from the local storage, it has to be parsed back to JavaScript with `JSON.parse`.
+
+Local storage items can be viewed on the console (by typing window.localStorage in it) or it can also be inspected using Developer Tools. 
