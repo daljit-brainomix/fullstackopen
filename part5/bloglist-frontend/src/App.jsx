@@ -1,26 +1,23 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
+import Notification from './components/Notification'
+import Togglable from './components/Togglable'
 
 import blogService from './services/blogs'
 import loginService from './services/login'
-import Notification from './components/Notification'
 
 const App = () => {
   const [notificationMessage, setNotificationMessage] = useState(null)
   const [blogs, setBlogs] = useState([])
 
-  const initialFormData = {
-    title: '',
-    author: '',
-    url: ''
-  }
-  const [blogFormData, setBlogFormData] = useState(initialFormData)  
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
+
+  const blogFormRef = useRef()
 
   const loadBlogs = async () => {
     console.log(`Loading new blogs ... ${new Date()}`)
@@ -49,25 +46,17 @@ const App = () => {
     setTimeout(() => setNotificationMessage(null), 5000)
   }
   
-  const handleBlogFormChange = (event) => {
-    const { name, value } = event.target;
-    setBlogFormData(prev => ({
-      ...prev,
-      [name]: value
-    }))
-  }
-
-  const handleBlogFormSubmit = async (event) => {
-    event.preventDefault()
-    
+  const handleBlogFormSubmit = async (blogFormData) => {
+    // event.preventDefault()
     console.log('Submitting blog form data', blogFormData)
     
     await blogService.setAuthToken(user.token)
     
     try {
       await blogService.createBlog(blogFormData)
-      showNotification('Blog created successfully!', 'success')
-      setBlogFormData(initialFormData)
+      showNotification('Blog created successfully!', 'success')      
+      // setNotes(notes.concat(returnedNote))
+      blogFormRef.current.toggleVisibility()
       await loadBlogs()
     } catch (error) {
       showNotification(`Error: ${error.response?.data?.error || error.message}`, 'error')
@@ -96,9 +85,7 @@ const App = () => {
     event.preventDefault()
     
     window.localStorage.removeItem('loggedBlogappUser')
-    
     setUser(null)
-    
     showNotification('You are logged out now.', 'success')
   }
 
@@ -117,15 +104,13 @@ const App = () => {
             handleLogin={handleLogin}
           /> :
           <div>
-            <p>{user.name} logged-in</p>
-            <button onClick={handleLogout}>logout</button>
+            <p>{user.name} logged-in <button onClick={handleLogout}>logout</button></p>            
 
-            <h2>Create new</h2>
-            <BlogForm 
-              formData={blogFormData}
-              handleFormChange={handleBlogFormChange}
-              handleFormSubmit={handleBlogFormSubmit}
-            />            
+            <br />
+            <Togglable buttonLabel="New note" ref={blogFormRef}>
+              <h2>Create new</h2>
+              <BlogForm blogFormSubmit={handleBlogFormSubmit} />
+            </Togglable>   
           </div>
       }
       <hr />
