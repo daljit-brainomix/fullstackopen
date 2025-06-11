@@ -21,9 +21,9 @@ const App = () => {
 
   const loadBlogs = async () => {
     console.log(`Loading new blogs ... ${new Date()}`)
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )    
+    const blogs = await blogService.getAll()
+    const sortedBlogs = blogs.sort((a, b) => b.likes - a.likes)
+    setBlogs(sortedBlogs)
   }
 
   useEffect(() => {
@@ -71,7 +71,7 @@ const App = () => {
       const updatedBlog = await blogService.likeBlog(blogToLike)
       setBlogs(blogs.map(blog => 
         blog.id === updatedBlog.id ? updatedBlog : blog
-      ))
+      ).sort((a, b) => b.likes - a.likes))
     } catch (error) {
       console.error('Error updating likes:', error.message);
     }
