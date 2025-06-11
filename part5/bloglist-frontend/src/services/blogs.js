@@ -34,8 +34,33 @@ const createBlog = async (blogData) => {
   }
 }
 
+const likeBlog = async (blogData) => {
+  console.log("Liking a blog .... ")
+  const config = {
+    headers: { 
+      'Authorization': authToken,
+      'Content-Type': 'application/json'  
+    }
+  }
+
+  const updatedBlogData = {
+    ...blogData,
+    likes: blogData.likes + 1,
+  }
+
+  try {
+    const response = await axios.put(`${baseUrl}/${blogData.id}`, updatedBlogData, config)
+    console.log('Response:', response.data)
+    return response.data
+  } catch (error) {
+    console.error('Error:', error.response ? error.response.data : error.message)
+    throw error // caller must use try/catch
+  }
+}
+
 export default { 
   createBlog,
+  likeBlog,
   getAll,
   setAuthToken,
 }

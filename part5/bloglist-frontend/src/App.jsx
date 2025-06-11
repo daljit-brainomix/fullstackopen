@@ -62,6 +62,20 @@ const App = () => {
       showNotification(`Error: ${error.response?.data?.error || error.message}`, 'error')
     }        
   }
+  const handleBlogLike = async (blogToLike) => {
+    console.log('Submitting blog like', blogToLike)
+    
+    await blogService.setAuthToken(user.token)
+
+    try { 
+      const updatedBlog = await blogService.likeBlog(blogToLike)
+      setBlogs(blogs.map(blog => 
+        blog.id === updatedBlog.id ? updatedBlog : blog
+      ))
+    } catch (error) {
+      console.error('Error updating likes:', error.message);
+    }
+  }
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -109,14 +123,14 @@ const App = () => {
             <br />
             <Togglable buttonLabel="New note" ref={blogFormRef}>
               <h2>Create new</h2>
-              <BlogForm blogFormSubmit={handleBlogFormSubmit} />
+              <BlogForm blogFormSubmitHandler={handleBlogFormSubmit} />
             </Togglable>   
           </div>
       }
       <hr />
       <h2>blogs</h2>      
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} blogLikeHandler={handleBlogLike} />
       )}
     </div>
   )
