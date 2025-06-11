@@ -1,0 +1,12 @@
+div.blog {    
+    border-bottom: 2px solid #E693CB;
+}
+
+div.blog .title {
+    font-weight: bold;
+}
+
+div.blog .body {
+    margin-bottom: 5px;
+    margin-left: 15px;
+}
