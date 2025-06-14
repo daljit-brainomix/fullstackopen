@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 import "./blog.css"
 
-const Blog = ({ blog, blogLikeHandler }) => {
+const Blog = ({ blog, blogLikeHandler, blogDeleteHandler }) => {
   const [visible, setVisible] = useState(false)
 
   const hideWhenVisible = { display: visible ? 'none' : ''}
@@ -16,10 +16,23 @@ const Blog = ({ blog, blogLikeHandler }) => {
     console.log("Liking the blog ...")
     event.preventDefault()
     try {
-      const updatedBlogData = await blogLikeHandler(blog)
+      await blogLikeHandler(blog)
     } catch(error) {
       console.error('Error:', error.response ? error.response.data : error.message)
       throw error // caller must use try/catch
+    }
+  }
+  const deleteBlog = async (event) => {
+    console.log("Deleting the blog ...")
+    event.preventDefault()
+    if (!window.confirm("Are you sure you want to delete this blog?")) {
+      return
+    }
+    try {
+      await blogDeleteHandler(blog.id)
+    } catch(error) {
+      console.error('Error:', error.response ? error.response.data : error.message)
+      throw error
     }
   }
 
@@ -46,6 +59,7 @@ const Blog = ({ blog, blogLikeHandler }) => {
           <button onClick={ addLike }>like</button>
         </p>
         <p><small>Created by: { blog.user.username }</small></p>
+        <p><button onClick={ deleteBlog }>Delete</button></p>
       </div>
     </div>  
   )

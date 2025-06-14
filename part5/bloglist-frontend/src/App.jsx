@@ -62,6 +62,7 @@ const App = () => {
       showNotification(`Error: ${error.response?.data?.error || error.message}`, 'error')
     }        
   }
+
   const handleBlogLike = async (blogToLike) => {
     console.log('Submitting blog like', blogToLike)
     
@@ -74,6 +75,23 @@ const App = () => {
       ).sort((a, b) => b.likes - a.likes))
     } catch (error) {
       console.error('Error updating likes:', error.message);
+    }
+  }
+
+  const handleBlogDelete = async (blogId) => {
+    console.log('Calling service to delete blog ID', blogId)
+    
+    await blogService.setAuthToken(user.token)
+
+    try { 
+      await blogService.deleteBlog(blogId)
+      setBlogs(
+        blogs.filter(blog => blog.id !== blogId)
+      )
+      showNotification('Blog deleted successfully!', 'success')
+    } catch (error) {
+      showNotification(`Error: ${error.response?.data?.error || error.message}`, 'error')
+      console.error('Error deleting blog:', error.message);
     }
   }
 
@@ -118,7 +136,7 @@ const App = () => {
             handleLogin={handleLogin}
           /> :
           <div>
-            <p>{user.name} logged-in <button onClick={handleLogout}>logout</button></p>            
+            <p>{user.name} logged-in <button onClick={handleLogout}>logout</button></p>
 
             <br />
             <Togglable buttonLabel="New note" ref={blogFormRef}>
@@ -128,9 +146,14 @@ const App = () => {
           </div>
       }
       <hr />
-      <h2>blogs</h2>      
+      <h2>blogs</h2>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} blogLikeHandler={handleBlogLike} />
+        <Blog 
+          key={blog.id}
+          blog={blog}
+          blogLikeHandler={handleBlogLike} 
+          blogDeleteHandler={handleBlogDelete} 
+        />
       )}
     </div>
   )

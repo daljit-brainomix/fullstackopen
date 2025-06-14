@@ -57,9 +57,28 @@ const likeBlog = async (blogData) => {
     throw error // caller must use try/catch
   }
 }
+const deleteBlog = async (blogId) => {
+  console.log("Deleting a blog ID .... ", blogId)
+  const config = {
+    headers: { 
+      'Authorization': authToken,
+      'Content-Type': 'application/json'  
+    }
+  }
+
+  try {
+    const response = await axios.delete(`${baseUrl}/${blogId}`, config)
+    console.log('Response:', response.data)
+    return response.data
+  } catch (error) {
+    console.error('Error:', error.response ? error.response.data : error.message)
+    throw error // caller must use try/catch
+  }
+}
 
 export default { 
   createBlog,
+  deleteBlog,
   likeBlog,
   getAll,
   setAuthToken,
