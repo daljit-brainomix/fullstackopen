@@ -1,0 +1,85 @@
+import axios from 'axios'
+const baseUrl = '/api/blogs'
+
+let authToken
+
+const setAuthToken = async (newToken) => {
+  authToken = `Bearer ${newToken}`
+}
+
+// const getAll = () => {
+//   const request = axios.get(baseUrl)
+//   return request.then(response => response.data)
+// }
+const getAll = async () => {
+  const response = await axios.get(baseUrl)
+  return response.data
+}
+
+const createBlog = async (blogData) => {
+  const config = {
+    headers: { 
+      'Authorization': authToken,
+      'Content-Type': 'application/json'  
+    }
+  }
+
+  try {
+    const response = await axios.post(baseUrl, blogData, config)
+    console.log('Response:', response.data)
+    return response.data
+  } catch (error) {
+    console.error('Error:', error.response ? error.response.data : error.message)
+    throw error // caller must use try/catch
+  }
+}
+
+const likeBlog = async (blogData) => {
+  console.log("Liking a blog .... ")
+  const config = {
+    headers: { 
+      'Authorization': authToken,
+      'Content-Type': 'application/json'  
+    }
+  }
+
+  const updatedBlogData = {
+    ...blogData,
+    likes: blogData.likes + 1,
+  }
+
+  try {
+    const response = await axios.put(`${baseUrl}/${blogData.id}`, updatedBlogData, config)
+    console.log('Response:', response.data)
+    return response.data
+  } catch (error) {
+    console.error('Error:', error.response ? error.response.data : error.message)
+    throw error // caller must use try/catch
+  }
+}
+const deleteBlog = async (blogId) => {
+  console.log("Deleting a blog ID .... ", blogId)
+  const config = {
+    headers: { 
+      'Authorization': authToken,
+      'Content-Type': 'application/json'  
+    }
+  }
+
+  try {
+    const response = await axios.delete(`${baseUrl}/${blogId}`, config)
+    console.log('Response:', response.data)
+    return response.data
+  } catch (error) {
+    console.error('Error:', error.response ? error.response.data : error.message)
+    throw error // caller must use try/catch
+  }
+}
+
+export default { 
+  createBlog,
+  deleteBlog,
+  likeBlog,
+  getAll,
+  setAuthToken,
+}
